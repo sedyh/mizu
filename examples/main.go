@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"time"
 
-	"mizu"
+	"mizu/pkg/engine"
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
@@ -33,7 +33,7 @@ type Velocity struct {
 	*Vel
 }
 
-func (v *Velocity) Update(w mizu.World) {
+func (v *Velocity) Update(w engine.World) {
 	v.Pos.X += v.Vel.L
 	v.Pos.Y += v.Vel.M
 	if v.Pos.X < 0 ||
@@ -64,7 +64,7 @@ func (r *Render) Draw(screen *ebiten.Image) {
 
 type Menu struct{}
 
-func (m *Menu) Setup(w mizu.World) {
+func (m *Menu) Setup(w engine.World) {
 	//w.AddComponents(Pos{}, Vel{}, Rad{})
 	radius := 15.0
 	width, height := float64(w.Bounds().Dx()), float64(w.Bounds().Dy())
@@ -86,5 +86,5 @@ func (m *Menu) Setup(w mizu.World) {
 func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	ebiten.SetFPSMode(ebiten.FPSModeVsyncOn)
-	ebiten.RunGame(mizu.NewGame(&Menu{}))
+	ebiten.RunGame(engine.NewGame(&Menu{}))
 }

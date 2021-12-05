@@ -4,7 +4,9 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"mizu"
+	"mizu/test/helper"
+
+	"mizu/pkg/engine"
 )
 
 var _ = Describe("Game world", func() {
@@ -23,7 +25,7 @@ var _ = Describe("Game world", func() {
 
 		// This is a game init
 		entity := &Ball{Rad(5), Pos{1, 1}, Vel{2, 2}} // Should be a pointer
-		mizu.NewGame(&SingleEntityScene{entity})
+		engine.NewGame(&helper.SingleEntityScene{Entity: entity})
 	})
 
 	It("Should panic if entity is not pointer", func() {
@@ -36,7 +38,7 @@ var _ = Describe("Game world", func() {
 		type Ball struct {
 			Pos
 		}
-		mizu.NewGame(&SingleEntityScene{Ball{Pos{1, 1}}}) // Not a pointer
+		engine.NewGame(&helper.SingleEntityScene{Entity: Ball{Pos{1, 1}}}) // Not a pointer
 	})
 
 	It("Should panic if entity under pointer is not a struct", func() {
@@ -45,7 +47,7 @@ var _ = Describe("Game world", func() {
 		}()
 		type Ball int // Not a struct
 		b := Ball(1)
-		mizu.NewGame(&SingleEntityScene{&b})
+		engine.NewGame(&helper.SingleEntityScene{Entity: &b})
 	})
 
 	It("Should panic if entity components are pointers", func() {
@@ -58,6 +60,6 @@ var _ = Describe("Game world", func() {
 		type Ball struct {
 			*Pos // A pointer
 		}
-		mizu.NewGame(&SingleEntityScene{&Ball{&Pos{1, 1}}})
+		engine.NewGame(&helper.SingleEntityScene{Entity: &Ball{&Pos{1, 1}}})
 	})
 })

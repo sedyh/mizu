@@ -1,19 +1,19 @@
-package test
+package helper
 
 import (
 	"fmt"
 	"regexp"
 	"runtime/debug"
 
-	"mizu"
+	"mizu/pkg/engine"
 )
 
 type SingleEntityScene struct {
-	entity interface{}
+	Entity interface{}
 }
 
-func (s *SingleEntityScene) Setup(w mizu.World) {
-	w.AddEntities(s.entity)
+func (s *SingleEntityScene) Setup(w engine.World) {
+	w.AddEntities(s.Entity)
 }
 
 func FailMessage(err interface{}) string {
