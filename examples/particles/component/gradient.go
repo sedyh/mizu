@@ -1,8 +1,6 @@
 package component
 
-import (
-	"image/color"
-)
+import "image/color"
 
 type Gradient struct {
 	Colors []color.Color

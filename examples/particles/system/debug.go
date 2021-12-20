@@ -7,7 +7,6 @@ import (
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 
 	"github.com/sedyh/mizu/examples/particles/component"
-
 	"github.com/sedyh/mizu/pkg/engine"
 )
 

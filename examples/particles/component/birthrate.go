@@ -1,8 +1,6 @@
 package component
 
-import (
-	"time"
-)
+import "time"
 
 type Birthrate struct {
 	Amount int
