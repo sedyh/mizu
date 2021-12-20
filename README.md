@@ -1,7 +1,8 @@
 ### Mizu
 
 Mizu is Entity Component System framework for Ebiten.
-Mizu is based on [ento](https://github.com/wfranczyk/ento).
+
+Mizu is based on [ento](https://github.com/wfranczyk/ento), which is made by [wfranczyk](https://github.com/wfranczyk). 
 
 > The name is short for Mizutaki, a japenese dish,
 > where chicken pieces and vegetables stewed in a
@@ -127,4 +128,11 @@ if err := ebiten.RunGame(g); err != nil {
 
 - Very low boilerplate in exchange for a certain amount of reflection.
 - Scene management.
-- Compile defined entities.
+- Compile defined components and entities.
+
+
+### Examples
+
+To test the work of the framework, a small particle system is written on it.
+
+Please check out the [examples/particles](https://github.com/sedyh/mizu/tree/master/examples/particles) folder for a demo.
