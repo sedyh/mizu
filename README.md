@@ -124,7 +124,7 @@ Run the game.
 
 ```go
 // Provides its own ebiten.Game implementation
-g := engine.NewGame(&Menu{})
+g := engine.NewGame(&Game{})
 if err := ebiten.RunGame(g); err != nil {
 	log.Fatal(err)
 }
