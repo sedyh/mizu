@@ -1,4 +1,4 @@
-### Mizu
+# <img align="right" src="https://user-images.githubusercontent.com/19890545/146812487-90152c62-b2f4-4b3a-b550-6a4edf417817.gif" alt="mizu" title="mizu" /> Mizu
 
 Mizu is Entity Component System framework for Ebiten.
 
