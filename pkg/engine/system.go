@@ -11,7 +11,7 @@ type SystemUpdater interface {
 }
 
 type SystemDrawer interface {
-	Draw(screen *ebiten.Image)
+	Draw(w World, screen *ebiten.Image)
 }
 
 type system struct {
@@ -37,10 +37,16 @@ func makeSystem(world *world, s interface{}) *system {
 	for i := 0; i < systemFieldsNum; i++ {
 		componentValue := systemValue.Field(i)
 		if !componentValue.CanInterface() {
-			continue
+			continue // unexported field
 		}
-		componentType := componentValue.Type().Elem()
-		componentId := world.componentIds[componentType]
+		componentType := componentValue.Type()
+		if componentType.Kind() != reflect.Ptr {
+			continue // system value field is not component bound
+		}
+		componentId, found := world.componentIds[componentType.Elem()]
+		if !found {
+			continue // system pointer field is not component bound
+		}
 		res.ids = append(res.ids, componentId)
 		res.stores = append(res.stores, world.componentStores[componentId])
 		res.values = append(res.values, componentValue)
@@ -50,6 +56,9 @@ func makeSystem(world *world, s interface{}) *system {
 }
 
 func (s *system) update(world World, entity *entity) {
+	if entity == nil {
+		return
+	}
 	if entity.mask.contains(s.mask) {
 		for i := range s.stores {
 			s.stores[i].get(entity.id, s.values[i])
@@ -60,13 +69,13 @@ func (s *system) update(world World, entity *entity) {
 	}
 }
 
-func (s *system) draw(screen *ebiten.Image, entity *entity) {
+func (s *system) draw(world World, screen *ebiten.Image, entity *entity) {
 	if entity.mask.contains(s.mask) {
 		for i := range s.stores {
 			s.stores[i].get(entity.id, s.values[i])
 		}
 		if v, ok := s.inner.(SystemDrawer); ok {
-			v.Draw(screen)
+			v.Draw(world, screen)
 		}
 	}
 }

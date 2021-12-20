@@ -1,4 +1,4 @@
-module mizu
+module github.com/sedyh/mizu
 
 go 1.16
 

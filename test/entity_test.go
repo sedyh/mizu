@@ -4,9 +4,8 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
-	"mizu/test/helper"
-
-	"mizu/pkg/engine"
+	"github.com/sedyh/mizu/pkg/engine"
+	"github.com/sedyh/mizu/test/helper"
 )
 
 var _ = Describe("Game world", func() {
@@ -23,14 +22,16 @@ var _ = Describe("Game world", func() {
 			Vel // Should not be a pointer
 		}
 
-		// This is a game init
-		entity := &Ball{Rad(5), Pos{1, 1}, Vel{2, 2}} // Should be a pointer
-		engine.NewGame(&helper.SingleEntityScene{Entity: entity})
+		// Create Game and init Scene
+		helper.RunSingleSceneGame(func(w engine.World) {
+			w.AddComponents(Rad(0), Pos{}, Vel{})
+			w.AddEntities(&Ball{Rad(5), Pos{1, 1}, Vel{2, 2}}) // Should be a pointer
+		})
 	})
 
 	It("Should panic if entity is not pointer", func() {
 		defer func() {
-			Expect(recover()).To(Equal("entity should be a pointer"))
+			Expect(recover()).To(Equal("entity Ball should be a pointer"))
 		}()
 		type Pos struct {
 			X, Y float64
@@ -38,28 +39,36 @@ var _ = Describe("Game world", func() {
 		type Ball struct {
 			Pos
 		}
-		engine.NewGame(&helper.SingleEntityScene{Entity: Ball{Pos{1, 1}}}) // Not a pointer
+		helper.RunSingleSceneGame(func(w engine.World) {
+			w.AddComponents(Pos{})
+			w.AddEntities(Ball{Pos{1, 1}}) // Not a pointer
+		})
 	})
 
 	It("Should panic if entity under pointer is not a struct", func() {
 		defer func() {
-			Expect(recover()).To(Equal("entity under pointer should be a struct"))
+			Expect(recover()).To(Equal("entity Ball under pointer should be a struct"))
 		}()
-		type Ball int // Not a struct
+		type Ball int
 		b := Ball(1)
-		engine.NewGame(&helper.SingleEntityScene{Entity: &b})
+		helper.RunSingleSceneGame(func(w engine.World) {
+			w.AddEntities(&b) // Not a struct
+		})
 	})
 
 	It("Should panic if entity components are pointers", func() {
 		defer func() {
-			Expect(recover()).To(Equal("entity should be a pointer"))
+			Expect(recover()).To(Equal("entity component Pos should not be a pointer"))
 		}()
 		type Pos struct {
 			X, Y float64
 		}
 		type Ball struct {
-			*Pos // A pointer
+			*Pos // Should not be a pointer
 		}
-		engine.NewGame(&helper.SingleEntityScene{Entity: &Ball{&Pos{1, 1}}})
+		helper.RunSingleSceneGame(func(w engine.World) {
+			w.AddComponents(&Pos{})
+			w.AddEntities(&Ball{&Pos{1, 1}})
+		})
 	})
 })

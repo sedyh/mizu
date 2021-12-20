@@ -1,22 +1,29 @@
 package engine
 
 import (
+	"container/list"
+	"fmt"
 	"reflect"
 )
 
+type Entity interface {
+	Get(components ...interface{})
+}
+
 type entity struct {
-	w    *world
-	id   int
-	mask mask
+	w       *world
+	id      int
+	mask    mask
+	element *list.Element
 }
 
 func makeEntity(w *world, components ...interface{}) *entity {
 	e := &entity{
 		w:    w,
-		id:   len(w.entities),
+		id:   w.entitiesIndexes.get(),
 		mask: makeMask(len(w.componentStores)),
 	}
-	e.Set(components...)
+	e.set(components...)
 	return e
 }
 
@@ -33,11 +40,17 @@ func (e *entity) Get(components ...interface{}) {
 	}
 }
 
-func (e *entity) Set(components ...interface{}) {
+func (e *entity) set(components ...interface{}) {
 	for _, component := range components {
 		componentValue := reflect.ValueOf(component)
 		componentType := componentValue.Type()
-		componentId := e.w.componentIds[componentType]
+		if componentType.Kind() == reflect.Ptr {
+			panic(fmt.Sprintf("entity component %s should not be a pointer", componentType.Elem().Name()))
+		}
+		componentId, found := e.w.componentIds[componentType]
+		if !found {
+			panic(fmt.Sprintf("entity has unregistered component %s", componentType.Name()))
+		}
 		if e.mask.get(componentId) {
 			e.w.componentStores[componentId].set(e.id, componentValue)
 			return
@@ -47,7 +60,7 @@ func (e *entity) Set(components ...interface{}) {
 	}
 }
 
-func (e *entity) Rem(components ...interface{}) {
+func (e *entity) rem(components ...interface{}) {
 	for _, component := range components {
 		componentValue := reflect.ValueOf(component)
 		componentType := componentValue.Type()

@@ -16,20 +16,10 @@ func structFieldTypes(structType reflect.Value) []interface{} {
 	return res
 }
 
-func mapTypesToInterface(types []reflect.Type) []interface{} {
-	res := make([]interface{}, 0, 2)
-	for _, t := range types {
-		if !exported(t) {
-			continue
-		}
-		//fmt.Println("loose", t.Name())
-		//tt := reflect.ValueOf(t).Interface()
-		//fmt.Println("geeet", reflect.ValueOf(tt).Type().Name())
-		res = append(res, t)
+func typeName(t reflect.Type) string {
+	name := t.Name()
+	if name != "" {
+		return name
 	}
-	return res
-}
-
-func exported(v interface{}) bool {
-	return reflect.ValueOf(v).CanInterface()
+	return "anonymous"
 }
