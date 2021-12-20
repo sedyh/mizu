@@ -9,8 +9,8 @@ A little particle system made on Mizu.
 
 ### Structure
 
-- The components/, entities/ and systems/ directories store only the corresponding structures.
-- The scenes/ directory is for menu, settings and game states.
+- The component/, entity/ and system/ directories store only the corresponding structures.
+- The scene/ directory is for menu, settings and game states.
 
 ### Usage
 
