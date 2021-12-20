@@ -11,10 +11,16 @@ Mizu is based on [ento](https://github.com/wfranczyk/ento), which is made by [wf
 
 ### Contents
 
+- [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Features](#features)
 - [Examples](#examples)
+
+### Features
+
+- Very low boilerplate in exchange for a certain amount of reflection.
+- Scene management.
+- Compile defined components and entities.
 
 ### Installation
 
@@ -123,13 +129,6 @@ if err := ebiten.RunGame(g); err != nil {
 	log.Fatal(err)
 }
 ```
-
-### Features
-
-- Very low boilerplate in exchange for a certain amount of reflection.
-- Scene management.
-- Compile defined components and entities.
-
 
 ### Examples
 
