@@ -2,11 +2,9 @@ module github.com/sedyh/mizu/examples/particles
 
 go 1.17
 
-replace github.com/sedyh/mizu => ../../
-
 require (
-	github.com/sedyh/mizu v0.0.0-00010101000000-000000000000
 	github.com/hajimehoshi/ebiten/v2 v2.2.3
+	github.com/sedyh/mizu v1.0.0
 )
 
 require (
