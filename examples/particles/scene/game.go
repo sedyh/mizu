@@ -20,7 +20,7 @@ func (g *Game) Setup(w engine.World) {
 		component.Pos{}, component.Vel{}, component.Accel{},
 		component.Angle{}, component.Spin{}, component.Scale{},
 		component.Growth{}, component.Life{}, component.Gradient{},
-		component.Sprite{}, component.Debug{},
+		component.Sprite{},
 	)
 
 	w.AddSystems(
@@ -44,9 +44,6 @@ func (g *Game) Setup(w engine.World) {
 			Life:      component.NewLife(0, 10, 50, 60),
 			Gradient:  component.NewGradient(helper.Gradient()...),
 			Sprite:    component.NewSprite(ebiten.NewImageFromImage(helper.Checkerboard(16, 16, 2))),
-		},
-		&entity.Debugger{
-			Debug: component.NewDebug(),
 		},
 	)
 }

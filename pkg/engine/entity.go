@@ -1,45 +1,52 @@
 package engine
 
 import (
-	"container/list"
 	"fmt"
 	"reflect"
 )
 
+// Entity represents any game object with inner id.
 type Entity interface {
-	Get(components ...interface{})
+	Get(components ...interface{}) // Gets entity components, takes a set of pointers to pointers.
 }
 
+// entity is inner struct that contains it own id and mask based on the components passed to the constructor.
 type entity struct {
-	w       *world
-	id      int
-	mask    mask
-	element *list.Element
+	w    *world
+	id   int
+	mask mask
 }
 
+// makeEntity creates new entity with id and mask based on the passed components.
 func makeEntity(w *world, components ...interface{}) *entity {
 	e := &entity{
 		w:    w,
-		id:   w.entitiesIndexes.get(),
-		mask: makeMask(len(w.componentStores)),
+		id:   w.entitiesIds.get(),
+		mask: makeMask(len(w.stores)),
 	}
 	e.set(components...)
 	return e
 }
 
+// Get sets the values of entity components according to the passed pointers.
+// Example:
+//     var pos *Pos
+//     var rad *Rad
+//     entity.Get(&pos, &rad)
 func (e *entity) Get(components ...interface{}) {
 	for _, component := range components {
 		componentValue := reflect.ValueOf(component).Elem()
 		componentType := componentValue.Type().Elem()
 		componentId := e.w.componentIds[componentType]
 		if e.mask.get(componentId) {
-			e.w.componentStores[componentId].get(e.id, componentValue)
+			e.w.stores[componentId].get(e.id, componentValue)
 		} else {
 			componentValue.Set(reflect.Zero(reflect.PtrTo(componentType)))
 		}
 	}
 }
 
+// set replaces the values of the entity components with the passed ones.
 func (e *entity) set(components ...interface{}) {
 	for _, component := range components {
 		componentValue := reflect.ValueOf(component)
@@ -52,21 +59,22 @@ func (e *entity) set(components ...interface{}) {
 			panic(fmt.Sprintf("entity has unregistered component %s", componentType.Name()))
 		}
 		if e.mask.get(componentId) {
-			e.w.componentStores[componentId].set(e.id, componentValue)
+			e.w.stores[componentId].set(e.id, componentValue)
 			return
 		}
-		e.w.componentStores[componentId].add(e.id, componentValue)
+		e.w.stores[componentId].add(e.id, componentValue)
 		e.mask.set(componentId)
 	}
 }
 
+// rem zeroes the values of the entity components.
 func (e *entity) rem(components ...interface{}) {
 	for _, component := range components {
 		componentValue := reflect.ValueOf(component)
 		componentType := componentValue.Type()
 		componentId := e.w.componentIds[componentType]
 		if e.mask.get(componentId) {
-			e.w.componentStores[componentId].rem(e.id)
+			e.w.stores[componentId].rem(e.id)
 			e.mask.clear(componentId)
 		}
 	}

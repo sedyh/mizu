@@ -1,7 +1,6 @@
 package engine
 
 import (
-	"container/list"
 	"fmt"
 	"image"
 	"reflect"
@@ -10,78 +9,101 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 )
 
+// World is the main interface of the framework, which implements work with
+// entities, components and systems, allows you to change scenes during the game,
+// as well as create your own queries for entities.
 type World interface {
-	ChangeScene(next Scene)
-	Bounds() image.Rectangle
-	View(components ...interface{}) View
-	AddComponents(components ...interface{})
-	AddSystems(systems ...interface{})
-	AddEntities(entities ...interface{})
-	RemoveEntity(entity Entity)
+	ChangeScene(next Scene)                  // Switch scenes.
+	Bounds() image.Rectangle                 // Returns current physical window size.
+	View(components ...interface{}) View     // Creates a query to filter entities by their components.
+	AddComponents(components ...interface{}) // Registers the used components of your object properties.
+	AddSystems(systems ...interface{})       // Adds a system that will work with each entity by its components.
+	AddEntities(entities ...interface{})     // Adds an entities that will represent your objects.
+	RemoveEntity(entity Entity)              // Removes an entity.
 }
 
+// world is an internal struct, which implements both engine.World and ebiten.Game interfaces
 type world struct {
-	bounds          image.Rectangle
-	componentIds    map[reflect.Type]int
-	componentStores []*store
-	systems         []*system
-	entities        *list.List
-	entitiesIndexes pool
-	first           Scene
-	once            sync.Once
+	bounds       image.Rectangle
+	componentIds map[reflect.Type]int
+	entitiesIds  pool
+	stores       []*store
+	systems      []*system
+	entities     []*entity
+	first        Scene
+	once         sync.Once
 }
 
+// factory is a type responsible for creating world components in any order within the scene
+type factory func(values ...interface{})
+
+// NewGame creates world and returns ebiten.Game, which you can use right away,
+// or embed in your own ebiten.Game implementation if you want to add your own
+// behavior there (for example, change the logical resolution which is same
+// as physical by default).
 func NewGame(first Scene) ebiten.Game {
 	w := &world{
-		componentIds:    make(map[reflect.Type]int, 256),
-		componentStores: make([]*store, 0, 256),
-		entities:        list.New(),
-		entitiesIndexes: makePool(256),
-		first:           first,
+		componentIds: make(map[reflect.Type]int, 256),
+		stores:       make([]*store, 0, 256),
+		entities:     make([]*entity, 0, 256),
+		entitiesIds:  makePool(256),
+		first:        first,
 	}
 	return w
 }
 
+// Update implements Update() error from ebiten.Game.
 func (w *world) Update() error {
 	w.once.Do(func() { w.first.Setup(w) })
 	for _, s := range w.systems {
-		for element := w.entities.Front(); element != nil; element = element.Next() {
-			s.update(w, element.Value.(*entity))
+		for _, e := range w.entities {
+			s.updateForEachEntity(w, e)
 		}
+		s.updateForEachTick(w)
 	}
 	return nil
 }
 
+// Draw represents Draw(screen *ebiten.Image) from ebiten.Game.
 func (w *world) Draw(screen *ebiten.Image) {
 	for _, s := range w.systems {
-		for element := w.entities.Front(); element != nil; element = element.Next() {
-			s.draw(w, screen, element.Value.(*entity))
+		for _, e := range w.entities {
+			s.drawForEachEntity(w, screen, e)
 		}
+		s.drawForEachTick(w, screen)
 	}
 }
 
+// Layout represents Layout(width, height int) (int, int) from ebiten.Game.
 func (w *world) Layout(width, height int) (int, int) {
 	w.bounds = image.Rect(0, 0, width, height)
 	return width, height
 }
 
+// ChangeScene resets the world and switches the scene to a new one.
 func (w *world) ChangeScene(next Scene) {
 	w.componentIds = make(map[reflect.Type]int, 256)
-	w.componentStores = make([]*store, 0, 256)
-	w.entities = list.New()
-	w.entitiesIndexes = makePool(256)
+	w.stores = make([]*store, 0, 256)
+	w.entities = make([]*entity, 0, 256)
+	w.entitiesIds = makePool(256)
 	w.systems = make([]*system, 0, 2)
 	next.Setup(w)
 }
 
+// Bounds returns current physical window size.
+// If you want to change this behavior, then you can embed this implementation
+// of the ebiten.Game in your own and call the Layout(width, height int) (int, int)
+// of this implementation manually.
 func (w *world) Bounds() image.Rectangle {
 	return w.bounds
 }
 
+// View creates a query to filter entities by their components.
 func (w *world) View(components ...interface{}) View {
 	return makeView(w, components)
 }
 
+// AddComponents registers the used components that will represent your object properties.
 func (w *world) AddComponents(components ...interface{}) {
 	for _, component := range components {
 		componentValue := reflect.ValueOf(component)
@@ -90,10 +112,11 @@ func (w *world) AddComponents(components ...interface{}) {
 			continue
 		}
 		w.componentIds[componentType] = len(w.componentIds)
-		w.componentStores = append(w.componentStores, makeStore(componentType))
+		w.stores = append(w.stores, makeStore(componentType))
 	}
 }
 
+// AddEntities adds entities that will represent your game objects
 func (w *world) AddEntities(entities ...interface{}) {
 	for _, e := range entities {
 		probablePointer := reflect.ValueOf(e)
@@ -105,28 +128,36 @@ func (w *world) AddEntities(entities ...interface{}) {
 			panic(fmt.Sprintf("entity %s under pointer should be a struct", typeName(probableStruct.Type())))
 		}
 		components := structFieldTypes(probableStruct)
-		en := makeEntity(w, components...)
-		en.element = w.entities.PushBack(en)
+		w.entities = append(w.entities, makeEntity(w, components...))
 	}
 }
 
+// AddSystems adds systems that will work with each entity by its components
 func (w *world) AddSystems(systems ...interface{}) {
 	for _, s := range systems {
 		w.systems = append(w.systems, makeSystem(w, s))
 	}
 }
 
+// RemoveEntity removes an entity
 func (w *world) RemoveEntity(e Entity) {
 	if v, ok := e.(*entity); ok {
-		w.entities.Remove(v.element)
-		w.entitiesIndexes.rem(v.id)
+		for i, candidate := range w.entities {
+			if candidate.id == v.id {
+				copy(w.entities[i:], w.entities[i+1:])
+				w.entities[len(w.entities)-1] = nil
+				w.entities = w.entities[:len(w.entities)-1]
 
-		for i := 0; i < len(w.componentStores); i++ {
-			if v.mask.get(i) {
-				w.componentStores[i].rem(v.id)
+				for i := 0; i < len(w.stores); i++ {
+					if v.mask.get(i) {
+						w.stores[i].rem(v.id)
+					}
+				}
+				w.entitiesIds.rem(v.id)
+				v.w, v.id, v.mask = nil, -1, nil
+
+				break
 			}
 		}
-
-		v.w, v.element, v.id, v.mask = nil, nil, -1, nil
 	}
 }

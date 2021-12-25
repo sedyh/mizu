@@ -84,7 +84,7 @@ func (v *Velocity) Update(w engine.World) {
     v.Pos.Y += v.Vel.M
 }
 
-// When you need many different sets of components
+// When you need many sets of components
 // in one system, you can use the views
 type Render struct {}
 
@@ -92,7 +92,7 @@ type Render struct {}
 func (r *Render) Draw(screen *ebiten.Image) {
     // But choose the ones you need yourself
     view := w.View(&Pos{}, Rad{})
-    view.Each(func(entity engine.Entity) {
+    for _, e := range view.Filter() {
         var pos *Pos
         var rad *Rad
         entity.Get(&pos, &rad)
@@ -103,7 +103,7 @@ func (r *Render) Draw(screen *ebiten.Image) {
             rad.Value, rad.Value,
             colornames.Aliceblue,
         )
-    })
+    }
 }
 ```
 
