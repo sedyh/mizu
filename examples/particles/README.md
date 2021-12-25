@@ -12,11 +12,10 @@ A little particle system made on Mizu.
 
 - [Preview](#preview)
 - [Running](#running)
-- [Performance](#performance)
 
 ### Preview
 
-
+![particles-preview](https://user-images.githubusercontent.com/19890545/147395575-8d56c480-12fe-4b35-822a-ae4fd4ae9915.gif)
 
 ### Running
 
@@ -26,5 +25,3 @@ To run the particle system from sources do the following command:
 go run github.com/sedyh/mizu/examples/particles@master
 ```
 <sub>Please remember that @master only works since Go 17.</sub>
-
-### Performance
