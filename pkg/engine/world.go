@@ -20,6 +20,9 @@ type World interface {
 	AddSystems(systems ...interface{})       // Adds a system that will work with each entity by its components.
 	AddEntities(entities ...interface{})     // Adds an entities that will represent your objects.
 	RemoveEntity(entity Entity)              // Removes an entity.
+	Components() int                         // Get current amount of registered components.
+	Systems() int                            // Get current amount of added systems.
+	Entities() int                           // Get current amount of added entities.
 }
 
 // world is an internal struct, which implements both engine.World and ebiten.Game interfaces
@@ -33,9 +36,6 @@ type world struct {
 	first        Scene
 	once         sync.Once
 }
-
-// factory is a type responsible for creating world components in any order within the scene
-type factory func(values ...interface{})
 
 // NewGame creates world and returns ebiten.Game, which you can use right away,
 // or embed in your own ebiten.Game implementation if you want to add your own
@@ -160,4 +160,19 @@ func (w *world) RemoveEntity(e Entity) {
 			}
 		}
 	}
+}
+
+// Components returns current amount of registered components.
+func (w *world) Components() int {
+	return len(w.stores)
+}
+
+// Systems returns current amount of added systems.
+func (w *world) Systems() int {
+	return len(w.systems)
+}
+
+// Entities returns current amount of added entities.
+func (w *world) Entities() int {
+	return len(w.entities)
 }
