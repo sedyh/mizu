@@ -132,6 +132,5 @@ if err := ebiten.RunGame(g); err != nil {
 
 ### Examples
 
-To test the work of the framework, a small particle system is written on it.
-
-Please check out the [examples/particles](https://github.com/sedyh/mizu/tree/master/examples/particles) folder for a demo.
+A small particle system is written on Mizu: [examples/particles](https://github.com/sedyh/mizu/tree/master/examples/particles).
+A popular benchmark made on Mizu: [examples/bunnymark](https://github.com/sedyh/mizu/tree/master/examples/bunnymark).
