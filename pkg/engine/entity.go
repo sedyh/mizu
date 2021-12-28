@@ -35,13 +35,20 @@ func makeEntity(w *world, components ...interface{}) *entity {
 //     entity.Get(&pos, &rad)
 func (e *entity) Get(components ...interface{}) {
 	for _, component := range components {
-		componentValue := reflect.ValueOf(component).Elem()
-		componentType := componentValue.Type().Elem()
+		componentValue := reflect.ValueOf(component)
+		if componentValue.Kind() != reflect.Ptr {
+			panic(fmt.Sprintf("received entity component %s must be a pointer", typeName(componentValue.Type())))
+		}
+		componentValueElem := componentValue.Elem()
+		if componentValueElem.Kind() != reflect.Ptr {
+			panic(fmt.Sprintf("received entity component %s must be a pointer to pointer", typeName(componentValue.Type())))
+		}
+		componentType := componentValueElem.Type().Elem()
 		componentId := e.w.componentIds[componentType]
 		if e.mask.get(componentId) {
-			e.w.stores[componentId].get(e.id, componentValue)
+			e.w.stores[componentId].get(e.id, componentValueElem)
 		} else {
-			componentValue.Set(reflect.Zero(reflect.PtrTo(componentType)))
+			componentValueElem.Set(reflect.Zero(reflect.PtrTo(componentType)))
 		}
 	}
 }

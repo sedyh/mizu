@@ -100,14 +100,13 @@ func (w *world) Bounds() image.Rectangle {
 
 // View creates a query to filter entities by their components.
 func (w *world) View(components ...interface{}) View {
-	return makeView(w, components)
+	return makeView(w, components...)
 }
 
 // AddComponents registers the used components that will represent your object properties.
 func (w *world) AddComponents(components ...interface{}) {
 	for _, component := range components {
-		componentValue := reflect.ValueOf(component)
-		componentType := componentValue.Type()
+		componentType := reflect.TypeOf(component)
 		if _, ok := w.componentIds[componentType]; ok {
 			continue
 		}
@@ -148,9 +147,9 @@ func (w *world) RemoveEntity(e Entity) {
 				w.entities[len(w.entities)-1] = nil
 				w.entities = w.entities[:len(w.entities)-1]
 
-				for i := 0; i < len(w.stores); i++ {
-					if v.mask.get(i) {
-						w.stores[i].rem(v.id)
+				for j := 0; j < len(w.stores); j++ {
+					if v.mask.get(j) {
+						w.stores[j].rem(v.id)
 					}
 				}
 				w.entitiesIds.rem(v.id)

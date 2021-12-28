@@ -9,6 +9,7 @@ import (
 // This is useful when you need to make requests to different sets
 // of components in the same system.
 type View interface {
+	Each(consumer func(entity Entity))
 	Filter() []Entity
 }
 
@@ -24,14 +25,27 @@ func makeView(world *world, components ...interface{}) *view {
 
 	for _, component := range components {
 		componentType := reflect.TypeOf(component)
-		componentId := world.componentIds[componentType]
+		componentId, ok := world.componentIds[componentType]
+		if !ok {
+			continue
+		}
 		m.set(componentId)
 	}
 
 	return &view{w: world, mask: m}
 }
 
+// Each iterates all entities with the previously selected components.
+func (v *view) Each(consumer func(entity Entity)) {
+	for _, e := range v.w.entities {
+		if e.mask.contains(v.mask) {
+			consumer(e)
+		}
+	}
+}
+
 // Filter returns a list of entities with the previously selected components for separate sorting and iteration.
+// It is save to delete from here
 func (v *view) Filter() []Entity {
 	entities := make([]Entity, 0, 2)
 	for _, e := range v.w.entities {

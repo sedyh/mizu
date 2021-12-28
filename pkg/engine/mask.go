@@ -1,5 +1,7 @@
 package engine
 
+import "fmt"
+
 // mask is an implementation of an expanding bitmask.
 type mask []uint64
 
@@ -31,4 +33,12 @@ func (m mask) contains(mask mask) bool {
 		}
 	}
 	return true
+}
+
+func (m mask) String() string {
+	str := ""
+	for _, bits := range m {
+		str += fmt.Sprintf("%064b", bits)
+	}
+	return str
 }
