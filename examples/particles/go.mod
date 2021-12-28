@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/hajimehoshi/ebiten/v2 v2.2.3
-	github.com/sedyh/mizu v1.0.0
+	github.com/sedyh/mizu v1.0.3
 )
 
 require (
