@@ -36,6 +36,7 @@ func makeView(world *world, components ...interface{}) *view {
 }
 
 // Each iterates all entities with the previously selected components.
+// This method is for iteration only.
 func (v *view) Each(consumer func(entity Entity)) {
 	for _, e := range v.w.entities {
 		if e.mask.contains(v.mask) {
@@ -45,7 +46,7 @@ func (v *view) Each(consumer func(entity Entity)) {
 }
 
 // Filter returns a list of entities with the previously selected components for separate sorting and iteration.
-// It is save to delete from here
+// It is safe to delete entities from here, you also can use this to sort your entities.
 func (v *view) Filter() []Entity {
 	entities := make([]Entity, 0, 2)
 	for _, e := range v.w.entities {
