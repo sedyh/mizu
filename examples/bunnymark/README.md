@@ -26,7 +26,7 @@ go run github.com/sedyh/mizu/examples/bunnymark@master
 
 Maximum objects at stable 60 FPS
 
-| Software                                     | Hardware                 |  Mizu via systems objects | Ebiten objects |
-|----------------------------------------------|--------------------------|---------------------------|----------------|
-| Native, MacOS Big Sur 11.1                   | M1 2020                  | 31000                     | 65000          |
-| Native, Linux Mint 20.2 Cinnamon             | Ryzen 5 3600, RX 5700 XT | 16000                     | 36000          |
+| Software                                     | Hardware                 |  Mizu objects | Ebiten objects |
+|----------------------------------------------|--------------------------|---------------|----------------|
+| Native, MacOS Big Sur 11.1                   | M1 2020                  | 31000         | 65000          |
+| Native, Linux Mint 20.2 Cinnamon             | Ryzen 5 3600, RX 5700 XT | 16000         | 36000          |
