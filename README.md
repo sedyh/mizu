@@ -1,4 +1,4 @@
-# <img align="right" src="https://user-images.githubusercontent.com/19890545/147574976-97120058-08c8-4969-ab72-b5db18571635.png" alt="mizu" title="mizu" /> Mizu
+# <img align="right" width="150" src="https://user-images.githubusercontent.com/19890545/147574976-97120058-08c8-4969-ab72-b5db18571635.png" alt="mizu" title="mizu" /> Mizu
 
 Mizu is Entity Component System framework for Ebiten.
 
@@ -26,9 +26,7 @@ Mizu is based on [ento](https://github.com/wfranczyk/ento), which is made by [wf
 
 To check all examples, visit [this](https://github.com/sedyh/mizu/tree/master/examples) page.
 
-![particles-preview](https://user-images.githubusercontent.com/19890545/149218102-290ebacd-6cb6-472d-836f-462d4977f1c0.gif)
-![tilemap-preview](https://user-images.githubusercontent.com/19890545/149233216-652ad973-4942-494f-a790-5ff059f10559.gif)
-![bunnymark-preview](https://user-images.githubusercontent.com/19890545/149235154-52da3044-363e-491a-a25e-80915c5b8df4.gif)
+<a href="https://github.com/sedyh/mizu/tree/master/examples/particles"> <img width="150" src="https://user-images.githubusercontent.com/19890545/149218102-290ebacd-6cb6-472d-836f-462d4977f1c0.gif"></a> <a href="https://github.com/sedyh/mizu/tree/master/examples/tilemap"><img width="150" src="https://user-images.githubusercontent.com/19890545/149233216-652ad973-4942-494f-a790-5ff059f10559.gif"></a> <a href="https://github.com/sedyh/mizu/tree/master/examples/bunnymark"><img width="150" src="https://user-images.githubusercontent.com/19890545/149235154-52da3044-363e-491a-a25e-80915c5b8df4.gif"></a>
 
 ### Installation
 
