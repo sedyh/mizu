@@ -20,6 +20,7 @@ type World interface {
 	AddSystems(systems ...interface{})       // Adds a system that will work with each entity by its components.
 	AddEntities(entities ...interface{})     // Adds an entities that will represent your objects.
 	RemoveEntity(entity Entity)              // Removes an entity.
+	GetEntity(id int) (e Entity, ok bool)    // Returns an entity by id and a search status.
 	Components() int                         // Get current amount of registered components.
 	Systems() int                            // Get current amount of added systems.
 	Entities() int                           // Get current amount of added entities.
@@ -136,6 +137,17 @@ func (w *world) AddSystems(systems ...interface{}) {
 	for _, s := range systems {
 		w.systems = append(w.systems, makeSystem(w, s))
 	}
+}
+
+// GetEntity finds an entity by its id and returns status code
+func (w *world) GetEntity(id int) (e Entity, ok bool) {
+	for _, e := range w.entities {
+		if e.id == id {
+			return e, true
+		}
+	}
+
+	return nil, false
 }
 
 // RemoveEntity removes an entity

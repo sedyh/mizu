@@ -22,6 +22,14 @@ Mizu is based on [ento](https://github.com/wfranczyk/ento), which is made by [wf
 - Scene management.
 - Compile defined components and entities.
 
+### Examples
+
+To check all examples, visit [this](https://github.com/sedyh/mizu/tree/master/examples) page.
+
+![particles-preview](https://user-images.githubusercontent.com/19890545/149218102-290ebacd-6cb6-472d-836f-462d4977f1c0.gif)
+![tilemap-preview](https://user-images.githubusercontent.com/19890545/149233216-652ad973-4942-494f-a790-5ff059f10559.gif)
+![bunnymark-preview](https://user-images.githubusercontent.com/19890545/149235154-52da3044-363e-491a-a25e-80915c5b8df4.gif)
+
 ### Installation
 
 ```
@@ -91,8 +99,8 @@ type Render struct {}
 // Render every entity
 func (r *Render) Draw(screen *ebiten.Image) {
     // But choose the ones you need yourself
-    view := w.View(&Pos{}, Rad{})
-    for _, e := range view.Filter() {
+    view := w.View(Pos{}, Rad{})
+    view.Each(func(entity engine.Entity) {
         var pos *Pos
         var rad *Rad
         entity.Get(&pos, &rad)
@@ -103,7 +111,7 @@ func (r *Render) Draw(screen *ebiten.Image) {
             rad.Value, rad.Value,
             colornames.Aliceblue,
         )
-    }
+    })
 }
 ```
 
@@ -129,9 +137,3 @@ if err := ebiten.RunGame(g); err != nil {
 	log.Fatal(err)
 }
 ```
-
-### Examples
-
-A small particle system is written on Mizu: [examples/particles](https://github.com/sedyh/mizu/tree/master/examples/particles).
-
-A popular benchmark made on Mizu: [examples/bunnymark](https://github.com/sedyh/mizu/tree/master/examples/bunnymark).

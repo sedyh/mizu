@@ -7,6 +7,7 @@ import (
 
 // Entity represents any game object with inner id.
 type Entity interface {
+	ID() int                       // Gets entity id for storage elsewhere.
 	Get(components ...interface{}) // Gets entity components, takes a set of pointers to pointers.
 }
 
@@ -26,6 +27,11 @@ func makeEntity(w *world, components ...interface{}) *entity {
 	}
 	e.set(components...)
 	return e
+}
+
+// ID returns entity id
+func (e *entity) ID() int {
+	return e.id
 }
 
 // Get sets the values of entity components according to the passed pointers.
