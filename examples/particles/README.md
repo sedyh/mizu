@@ -5,7 +5,7 @@ A little particle system made on Mizu.
 - To create any effect, you need to create a particle.
 - All particles in this system are divided into main and secondary, they are called emitters and particles.
 - Emitters contain the enabled root component, while the particles do not.
-- This example contains a scene with a two emitter that creates particles each frame and transmits its settings to them.
+- This example contains a scene with a two emitters that creates particles each frame and transmits its settings to them.
 - The emitter parameters indicate various physical quantities that you can play with to achieve various effects.
 
 ### Contents
