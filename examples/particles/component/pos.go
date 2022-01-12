@@ -1,6 +1,8 @@
 package component
 
-import "github.com/sedyh/mizu/examples/particles/helper"
+import (
+	"github.com/sedyh/mizu/examples/particles/helper"
+)
 
 type Pos struct {
 	X, Y float64

@@ -38,10 +38,12 @@ func (s *Spawn) Update(w engine.World) {
 }
 
 func (s *Spawn) addBunnies(w engine.World) {
+	// Spawns specific amount of bunnies at the edges of the screen
+	// It will alternately add bunnies to the left and right corners of the screen
 	for i := 0; i < s.Amount; i++ {
 		w.AddEntities(&entity.Bunny{
 			Position: component.Position{
-				X: float64(w.Entities() % 2),
+				X: float64(w.Entities() % 2), // Alternate screen edges
 			},
 			Velocity: component.Velocity{
 				X: helper.RangeFloat(0, 0.005),

@@ -12,10 +12,11 @@ type Acceleration struct {
 }
 
 func (a *Acceleration) Update(_ engine.World) {
-	if a.Root.Root {
+	if a.Root.Enabled {
 		return
 	}
 
+	// Increase velocity
 	a.Vel.L += a.Accel.O
 	a.Vel.M += a.Accel.P
 }

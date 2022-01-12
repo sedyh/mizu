@@ -1,7 +1,7 @@
 package component
 
 type Root struct {
-	Root bool
+	Enabled bool
 }
 
 func NewRoot() Root {

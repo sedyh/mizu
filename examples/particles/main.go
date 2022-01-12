@@ -12,9 +12,11 @@ import (
 )
 
 func main() {
-	rand.Seed(time.Now().UTC().UnixNano())
+	ebiten.SetWindowSize(800, 600)
+	ebiten.SetWindowSizeLimits(300, 200, -1, -1)
 	ebiten.SetFPSMode(ebiten.FPSModeVsyncOffMaximum)
 	ebiten.SetWindowResizable(true)
+	rand.Seed(time.Now().UTC().UnixNano())
 	if err := ebiten.RunGame(engine.NewGame(&scene.Game{})); err != nil {
 		log.Fatal(err)
 	}

@@ -11,10 +11,11 @@ type Age struct {
 }
 
 func (v *Age) Update(_ engine.World) {
-	if v.Root.Root {
+	if v.Root.Enabled {
 		return
 	}
 
+	// Increase age to death.
 	if v.Current >= v.Total {
 		return
 	}

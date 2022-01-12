@@ -24,8 +24,11 @@ type Emit struct {
 
 func (e *Emit) Update(w engine.World) {
 	select {
+	// Emit multiple particles per tick, as configured
 	case <-e.Birthrate.Ticker.C:
 		for i := 0; i < e.Birthrate.Amount; i++ {
+			// Calls each setting's constructor with the original arguments
+			// to create a newly generated copy and creates a particle from them.
 			w.AddEntities(&entity.Particle{
 				Pivot:    *e.Pivot,
 				Pos:      e.Pos.Init(),

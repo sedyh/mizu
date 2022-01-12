@@ -12,9 +12,10 @@ type Spin struct {
 }
 
 func (s *Spin) Update(_ engine.World) {
-	if s.Root.Root {
+	if s.Root.Enabled {
 		return
 	}
 
+	// Increase rotation angle.
 	s.Angle.Deg += s.Spin.Speed
 }

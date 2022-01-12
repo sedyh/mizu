@@ -3,6 +3,7 @@ package scene
 import (
 	"time"
 
+	"github.com/sedyh/mizu/examples/bunnymark/assets"
 	"github.com/sedyh/mizu/examples/bunnymark/component"
 	"github.com/sedyh/mizu/examples/bunnymark/entity"
 	"github.com/sedyh/mizu/examples/bunnymark/helper"
@@ -25,11 +26,11 @@ func (g *Game) Setup(w engine.World) {
 		&entity.Settings{
 			Settings: component.Settings{
 				Ticker:   time.NewTicker(500 * time.Millisecond),
-				Sprite:   helper.LoadSprite(),
 				Gpu:      helper.GpuInfo(),
 				Tps:      helper.NewPlot(20, 60),
 				Fps:      helper.NewPlot(20, 60),
 				Objects:  helper.NewPlot(20, 60000),
+				Sprite:   assets.Bunny,
 				Colorful: false,
 				Amount:   100,
 			},

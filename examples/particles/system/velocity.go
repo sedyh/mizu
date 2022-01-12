@@ -12,10 +12,11 @@ type Velocity struct {
 }
 
 func (v *Velocity) Update(_ engine.World) {
-	if v.Root.Root {
+	if v.Root.Enabled {
 		return
 	}
 
+	// Increase position.
 	v.Pos.X += v.Vel.L
 	v.Pos.Y += v.Vel.M
 }

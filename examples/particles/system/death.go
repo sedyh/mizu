@@ -14,7 +14,8 @@ func (d *Death) Update(w engine.World) {
 		var life *component.Life
 		e.Get(&root, &life)
 
-		if !root.Root && life.Current >= life.Total {
+		// Remove dead particles.
+		if !root.Enabled && life.Current >= life.Total {
 			w.RemoveEntity(e)
 		}
 	}

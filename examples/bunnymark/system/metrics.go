@@ -7,11 +7,10 @@ import (
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/ebitenutil"
 	"github.com/hajimehoshi/ebiten/v2/text"
-	"golang.org/x/image/colornames"
-	"golang.org/x/image/font/basicfont"
-
 	"github.com/sedyh/mizu/examples/bunnymark/component"
 	"github.com/sedyh/mizu/pkg/engine"
+	"golang.org/x/image/colornames"
+	"golang.org/x/image/font/basicfont"
 )
 
 type Metrics struct {
@@ -30,9 +29,9 @@ func (m *Metrics) Update(w engine.World) {
 
 func (m *Metrics) Draw(w engine.World, screen *ebiten.Image) {
 	str := fmt.Sprintf(
-		"GPU: %s\nTPS: %.2f, FPS: %.2f, Objects: %.f\nColorful: %t, Amount: %d\nResolution: %dx%d",
+		"GPU: %s\nTPS: %.2f, FPS: %.2f, Objects: %.f\nBatching: %t, Amount: %d\nResolution: %dx%d",
 		m.Gpu, m.Tps.Last(), m.Fps.Last(), m.Objects.Last(),
-		m.Colorful, m.Amount,
+		!m.Colorful, m.Amount,
 		w.Bounds().Dx(), w.Bounds().Dy(),
 	)
 
