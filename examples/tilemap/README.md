@@ -9,7 +9,6 @@ An implementation of a tile map with automatic tiling based on wang blob tileset
 
 - [Preview](#preview)
 - [Running](#running)
-- [Performance](#performance)
 
 
 ### Preview
