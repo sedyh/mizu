@@ -20,6 +20,6 @@ An implementation of a tile map with automatic tiling based on wang blob tileset
 To run the example from sources do the following command:
 
 ```
-go run github.com/sedyh/mizu/examples/bunnymark@master
+go run github.com/sedyh/mizu/examples/tilemap@master
 ```
 <sub>Please remember that @master only works since Go 17.</sub>
