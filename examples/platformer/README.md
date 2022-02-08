@@ -17,10 +17,9 @@ Limitations:
 - [Running](#running)
 - [Performance](#performance)
 
-
 ### Preview
 
-![platformer-preview](https://user-images.githubusercontent.com/19890545/153053601-a282aa37-be45-46b9-b258-d8765d89ffa5.gif)
+![platformer-preview](https://user-images.githubusercontent.com/19890545/153062691-573d8647-2793-4b84-a04d-99803fe0f8c0.gif)
 
 ### Running
 
