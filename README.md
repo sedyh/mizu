@@ -12,9 +12,9 @@ Mizu is based on [ento](https://github.com/wfranczyk/ento), which is made by [wf
 ### Contents
 
 - [Features](#features)
+- [Examples](#examples)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Examples](#examples)
 
 ### Features
 
