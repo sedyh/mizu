@@ -28,6 +28,10 @@ To check all examples, visit [this](https://github.com/sedyh/mizu/tree/master/ex
 
 <a href="https://github.com/sedyh/mizu/tree/master/examples/particles"> <img width="150" src="https://user-images.githubusercontent.com/19890545/149218102-290ebacd-6cb6-472d-836f-462d4977f1c0.gif"></a> <a href="https://github.com/sedyh/mizu/tree/master/examples/tilemap"><img width="150" src="https://user-images.githubusercontent.com/19890545/149233216-652ad973-4942-494f-a790-5ff059f10559.gif"></a> <a href="https://github.com/sedyh/mizu/tree/master/examples/bunnymark"><img width="150" src="https://user-images.githubusercontent.com/19890545/149235154-52da3044-363e-491a-a25e-80915c5b8df4.gif"></a> <a href="https://github.com/sedyh/mizu/tree/master/examples/platformer"> <img width="150" src="https://user-images.githubusercontent.com/19890545/153062691-573d8647-2793-4b84-a04d-99803fe0f8c0.gif"></a>
 
+<a href="https://github.com/sedyh/mizu/tree/master/examples/particles"> <img width="150" src="https://user-images.githubusercontent.com/19890545/149218102-290ebacd-6cb6-472d-836f-462d4977f1c0.gif"></a>
+
+[<img width="150" src="https://user-images.githubusercontent.com/19890545/149218102-290ebacd-6cb6-472d-836f-462d4977f1c0.gif">](https://github.com/sedyh/mizu/tree/master/examples/particles)
+
 ### Installation
 
 ```
