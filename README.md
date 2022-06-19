@@ -95,7 +95,7 @@ func (v *Velocity) Update(w engine.World) {
 type Render struct {}
 
 // Render one frame
-func (r *Render) Draw(screen *ebiten.Image) {
+func (r *Render) Draw(w engine.World, screen *ebiten.Image) {
     // But choose the right entities yourself
     view := w.View(Pos{}, Rad{})
     view.Each(func(entity engine.Entity) {
