@@ -1,6 +1,6 @@
 # <img align="right" width="150" src="https://user-images.githubusercontent.com/19890545/147574976-97120058-08c8-4969-ab72-b5db18571635.png" alt="mizu" title="mizu" /> Mizu
 
-Mizu is Entity Component System framework for Ebiten.
+Mizu is Entity Component System framework for Ebitengine.
 
 Mizu is based on [ento](https://github.com/wfranczyk/ento), which is made by [wfranczyk](https://github.com/wfranczyk). 
 
