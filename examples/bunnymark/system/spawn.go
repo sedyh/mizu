@@ -5,24 +5,24 @@ import (
 
 	"github.com/hajimehoshi/ebiten/v2"
 	"github.com/hajimehoshi/ebiten/v2/inpututil"
-
 	"github.com/sedyh/mizu/examples/bunnymark/component"
-	"github.com/sedyh/mizu/examples/bunnymark/entity"
 	"github.com/sedyh/mizu/examples/bunnymark/helper"
-	"github.com/sedyh/mizu/pkg/engine"
+	. "github.com/sedyh/mizu/pkg/engine"
 )
 
-type Spawn struct {
-	*component.Settings
-}
+func Spawn(w World) {
+	e, ok := w.Get(And[component.Settings]())
+	if !ok {
+		return
+	}
+	s := Get[component.Settings](e)
 
-func (s *Spawn) Update(w engine.World) {
 	if inpututil.IsMouseButtonJustPressed(ebiten.MouseButtonLeft) {
-		s.addBunnies(w)
+		addBunnies(w, s)
 	}
 
 	if ids := ebiten.AppendTouchIDs(nil); len(ids) > 0 {
-		s.addBunnies(w) // not accurate, cause no input manager for this
+		addBunnies(w, s)
 	}
 
 	if _, offset := ebiten.Wheel(); offset != 0 {
@@ -37,23 +37,14 @@ func (s *Spawn) Update(w engine.World) {
 	}
 }
 
-func (s *Spawn) addBunnies(w engine.World) {
-	// Spawns specific amount of bunnies at the edges of the screen
-	// It will alternately add bunnies to the left and right corners of the screen
+func addBunnies(w World, s *component.Settings) {
 	for i := 0; i < s.Amount; i++ {
-		w.AddEntities(&entity.Bunny{
-			Position: component.Position{
-				X: float64(w.Entities() % 2), // Alternate screen edges
-			},
-			Velocity: component.Velocity{
-				X: helper.RangeFloat(0, 0.005),
-				Y: helper.RangeFloat(0.0025, 0.005)},
-			Hue: component.Hue{
-				Colorful: &s.Colorful,
-				Value:    helper.RangeFloat(0, 2*math.Pi),
-			},
-			Gravity: component.Gravity{Value: 0.00095},
-			Sprite:  component.Sprite{Image: s.Sprite},
-		})
+		w.AddEntity(
+			component.NewPosition(float64(w.Entities()%2), 0),
+			component.NewVelocity(helper.RangeFloat(0, 0.005), helper.RangeFloat(0.0025, 0.005)),
+			component.NewSprite(s.Sprite),
+			component.NewHue(&s.Colorful, helper.RangeFloat(0, 2*math.Pi)),
+			component.NewGravity(0.00095),
+		)
 	}
 }

@@ -4,24 +4,44 @@ import (
 	"reflect"
 )
 
-// structFieldTypes returns exported fields of the struct
-func structFieldTypes(structType reflect.Value) []interface{} {
-	res := make([]interface{}, 0, 2)
-	for i := 0; i < structType.NumField(); i++ {
-		valueField := structType.Field(i)
-		if !valueField.CanInterface() {
-			continue
-		}
-		res = append(res, valueField.Interface())
+func assertKind(v any, k reflect.Kind, fail func()) {
+	value := reflect.ValueOf(v)
+	if value.Kind() != k {
+		fail()
 	}
-	return res
 }
 
-// typeName returns the type if there is one or "anonymous" if it is not
-func typeName(t reflect.Type) string {
-	name := t.Name()
-	if name != "" {
-		return name
-	}
-	return "anonymous"
-}
+//func initAnyType[T any]() *T {
+//	var x T
+//
+//	t := reflect.TypeOf(x)
+//	v := reflect.New(t)
+//
+//	if t.Kind() == reflect.Struct {
+//		walkInitStruct(t, v.Elem())
+//	}
+//
+//	return v.Interface().(*T)
+//}
+//
+//func walkInitStruct(t reflect.Type, v reflect.Value) {
+//	for i := 0; i < v.NumField(); i++ {
+//		f := v.Field(i)
+//		ft := t.Field(i)
+//		switch ft.Type.Kind() {
+//		case reflect.Map:
+//			f.Set(reflect.MakeMap(ft.Type))
+//		case reflect.Slice:
+//			f.Set(reflect.MakeSlice(ft.Type, 0, 0))
+//		case reflect.Chan:
+//			f.Set(reflect.MakeChan(ft.Type, 0))
+//		case reflect.Struct:
+//			walkInitStruct(ft.Type, f)
+//		case reflect.Ptr:
+//			fv := reflect.New(ft.Type.Elem())
+//			walkInitStruct(ft.Type.Elem(), fv.Elem())
+//			f.Set(fv)
+//		default:
+//		}
+//	}
+//}

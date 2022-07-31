@@ -2,23 +2,22 @@ package system
 
 import (
 	"github.com/hajimehoshi/ebiten/v2"
-
 	"github.com/sedyh/mizu/examples/bunnymark/component"
-	"github.com/sedyh/mizu/pkg/engine"
+	. "github.com/sedyh/mizu/pkg/engine"
 )
 
-type Render struct {
-	*component.Position
-	*component.Sprite
-	*component.Hue
-}
+func Render(w World, screen *ebiten.Image) {
+	w.Each(func(e Entity) {
+		pos := Get[component.Position](e)
+		sprite := Get[component.Sprite](e)
+		hue := Get[component.Hue](e)
 
-func (r *Render) Draw(_ engine.World, screen *ebiten.Image) {
-	sw, sh := float64(screen.Bounds().Dx()), float64(screen.Bounds().Dy())
-	op := &ebiten.DrawImageOptions{}
-	op.GeoM.Translate(r.Position.X*sw, r.Position.Y*sh)
-	if *r.Hue.Colorful {
-		op.ColorM.RotateHue(r.Hue.Value)
-	}
-	screen.DrawImage(r.Sprite.Image, op)
+		sw, sh := float64(screen.Bounds().Dx()), float64(screen.Bounds().Dy())
+		op := &ebiten.DrawImageOptions{}
+		op.GeoM.Translate(pos.X*sw, pos.Y*sh)
+		if *hue.Colorful {
+			op.ColorM.RotateHue(hue.Value)
+		}
+		screen.DrawImage(sprite.Image, op)
+	}, And[component.Position](), And[component.Sprite](), And[component.Hue]())
 }

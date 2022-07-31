@@ -1,94 +1,83 @@
 package engine
 
-import (
-	"fmt"
-	"reflect"
-)
-
-// Entity represents any game object with inner id.
 type Entity interface {
-	ID() int                       // Gets entity id for storage elsewhere.
-	Get(components ...interface{}) // Gets entity components, takes a set of pointers to pointers.
+	ID() int
+	Rem()
+	setComponent(component any)
+	getComponent(component any) (any, bool)
+	hasComponent(component any) bool
+	remComponent(component any)
 }
 
-// entity is inner struct that contains it own id and mask based on the components passed to the constructor.
 type entity struct {
-	w    *world
 	id   int
-	mask mask
+	m    mask
+	w    *world
+	dead bool
 }
 
-// makeEntity creates new entity with id and mask based on the passed components.
-func makeEntity(w *world, components ...interface{}) *entity {
-	e := &entity{
-		w:    w,
-		id:   w.entitiesIds.get(),
-		mask: makeMask(len(w.stores)),
+func newEntity(w *world, id int, components ...any) *entity {
+	e := &entity{id: id, m: newMask(InitialCapacity), w: w}
+
+	for _, c := range components {
+		w.componentPool.addEntityComponent(e, c)
 	}
-	e.set(components...)
+
 	return e
 }
 
-// ID returns entity id
 func (e *entity) ID() int {
 	return e.id
 }
 
-// Get sets the values of entity components according to the passed pointers.
-// Example:
-//     var pos *Pos
-//     var rad *Rad
-//     entity.Get(&pos, &rad)
-func (e *entity) Get(components ...interface{}) {
-	for _, component := range components {
-		componentValue := reflect.ValueOf(component)
-		if componentValue.Kind() != reflect.Ptr {
-			panic(fmt.Sprintf("received entity component %s must be a pointer", typeName(componentValue.Type())))
-		}
-		componentValueElem := componentValue.Elem()
-		if componentValueElem.Kind() != reflect.Ptr {
-			panic(fmt.Sprintf("received entity component %s must be a pointer to pointer", typeName(componentValue.Type())))
-		}
-		componentType := componentValueElem.Type().Elem()
-		componentId := e.w.componentIds[componentType]
-		if e.mask.get(componentId) {
-			e.w.stores[componentId].get(e.id, componentValueElem)
-		} else {
-			componentValueElem.Set(reflect.Zero(reflect.PtrTo(componentType)))
-		}
-	}
+func (e *entity) Rem() {
+	e.w.entityPool.remEntity(e)
 }
 
-// set replaces the values of the entity components with the passed ones.
-func (e *entity) set(components ...interface{}) {
-	for _, component := range components {
-		componentValue := reflect.ValueOf(component)
-		componentType := componentValue.Type()
-		if componentType.Kind() == reflect.Ptr {
-			panic(fmt.Sprintf("entity component %s should not be a pointer", componentType.Elem().Name()))
-		}
-		componentId, found := e.w.componentIds[componentType]
-		if !found {
-			panic(fmt.Sprintf("entity has unregistered component %s", componentType.Name()))
-		}
-		if e.mask.get(componentId) {
-			e.w.stores[componentId].set(e.id, componentValue)
-			return
-		}
-		e.w.stores[componentId].add(e.id, componentValue)
-		e.mask.set(componentId)
-	}
+func (e *entity) setComponent(component any) {
+	e.w.componentPool.addEntityComponent(e, component)
 }
 
-// rem zeroes the values of the entity components.
-func (e *entity) rem(components ...interface{}) {
-	for _, component := range components {
-		componentValue := reflect.ValueOf(component)
-		componentType := componentValue.Type()
-		componentId := e.w.componentIds[componentType]
-		if e.mask.get(componentId) {
-			e.w.stores[componentId].rem(e.id)
-			e.mask.clear(componentId)
-		}
+func (e *entity) getComponent(component any) (any, bool) {
+	if c, ok := e.w.componentPool.getComponent(component); ok {
+		return c.values[e.id], true
 	}
+
+	return nil, false
+}
+
+func (e *entity) hasComponent(component any) bool {
+	_, ok := e.w.componentPool.getComponent(component)
+
+	return ok
+}
+
+func (e *entity) remComponent(component any) {
+	e.w.componentPool.remEntityComponent(e, component)
+}
+
+func Set(e Entity, component any) {
+	e.setComponent(component)
+}
+
+func Get[T any](e Entity) *T {
+	var x *T
+
+	if c, ok := e.getComponent(x); ok {
+		return c.(*T)
+	}
+
+	return nil
+}
+
+func Has[T any](e Entity) bool {
+	var x *T
+
+	return e.hasComponent(x)
+}
+
+func Rem[T any](e Entity) {
+	var x *T
+
+	e.remComponent(x)
 }

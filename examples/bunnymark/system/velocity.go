@@ -2,15 +2,15 @@ package system
 
 import (
 	"github.com/sedyh/mizu/examples/bunnymark/component"
-	"github.com/sedyh/mizu/pkg/engine"
+	. "github.com/sedyh/mizu/pkg/engine"
 )
 
-type Velocity struct {
-	*component.Position
-	*component.Velocity
-}
+func Velocity(w World) {
+	w.Each(func(e Entity) {
+		pos := Get[component.Position](e)
+		vel := Get[component.Velocity](e)
 
-func (v *Velocity) Update(_ engine.World) {
-	v.Position.X += v.Velocity.X
-	v.Position.Y += v.Velocity.Y
+		pos.X += vel.X
+		pos.Y += vel.Y
+	}, And[component.Position](), And[component.Velocity]())
 }
