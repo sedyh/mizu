@@ -15,6 +15,7 @@ Mizu is based on [ento](https://github.com/wfranczyk/ento), which is made by [wf
 - [Examples](#examples)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Wiki](#wiki)
 
 ### Features
 
@@ -135,3 +136,7 @@ if err := ebiten.RunGame(g); err != nil {
 	log.Fatal(err)
 }
 ```
+
+### Wiki
+
+Please visit our [wiki](../../wiki) for a helpful articles and best practices about Mizu.
