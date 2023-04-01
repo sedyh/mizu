@@ -31,8 +31,16 @@ To check all examples, visit [this](https://github.com/sedyh/mizu/tree/master/ex
 
 ### Installation
 
+Mizu uses Go 1.20 at the current moment.
+
+Getting the latest version `reflection API`:
 ```
-go get github.com/sedyh/mizu
+go get -u github.com/sedyh/mizu
+```
+
+Getting the latest version `generics API`:
+```
+go get -u github.com/sedyh/mizu@experimental
 ```
 
 ### Usage
