@@ -15,7 +15,7 @@ func newComponent(id, capacity int) *component {
 
 func (c *component) setValue(entityID int, v any) {
 	if len(c.values) <= entityID {
-		c.values = append(c.values, make([]any, nextPowerOf2(len(c.values)))...)
+		c.values = append(c.values, make([]any, nextPowerOf2(entityID))...)
 	}
 
 	c.values[entityID] = v
@@ -36,6 +36,7 @@ func (c *component) hasValues() bool {
 }
 
 func nextPowerOf2(x int) int {
+	x--
 	x |= x >> 1
 	x |= x >> 2
 	x |= x >> 4
